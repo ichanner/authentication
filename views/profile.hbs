@@ -1,0 +1,233 @@
+{{#if username}}
+    
+
+
+<html>
+
+
+
+
+<body>
+
+
+
+
+
+
+<form method="Post" id="ref" name="ref" action = "/refreshToken">
+
+<input id="access2" name="access2"></input>
+
+</form>
+
+
+<div id="avatar"></div>
+<div id="name"></div>
+<div id="tag"></div>
+<div id="bio"></div>
+<div id="date"></div>
+
+
+
+
+<form method="Post" onsubmit="setTimeout(refresh, 3000)" action = "/updateProfile">
+
+<input id="te" name="newname" placeholder="New Name"></input>
+<input type="submit"></input>
+
+</form>
+
+
+<form method="Post" onsubmit="setTimeout(refresh, 3000)" action = "/updateBio">
+
+<textarea name="newbio" placeholder="New Bio"></textarea>
+<input type="submit"></input>
+
+</form>
+
+
+
+
+<form method="Post" onsubmit="setTimeout(refresh, 3000)" action = "/updatePassword">
+
+<input  name="oldpass" placeholder="Current Password" ></input>
+<input  name="newpass" placeholder="New Password"></input>
+<input type="submit"></input>
+
+</form>
+
+
+<form method="Post" onsubmit="setTimeout(refresh, 3000)" action = "/updateEmail">
+
+<input id="te" name="newname" placeholder="New Email"></input>
+<input type="submit"></input>
+
+</form>
+
+
+
+<form method="Post" onsubmit="setTimeout(Logout, 3000)" action = "/logout">
+
+<input id="refresh" name="refresh"></input>
+<input id="access" name="access"></input>
+
+<input type="submit" value="Logout"></input>
+
+</form>
+
+
+<button onclick="Delete()">Delete Account</button>
+
+
+<div id="del">
+<form method="post" onsubmit="setTimeout(Logout, 3000)" action="/delete">
+
+<input placeholder="Reason" name="reason"></input>
+<input placeholder="Password" name="pass" required></input>
+<input type="submit" value="Delete Account"></input>
+
+</form> 
+</div>
+
+
+</body>
+
+<script type="text/javascript">
+
+
+
+document.getElementById("access2").value = localStorage.getItem("Authorization");
+document.getElementById("access2").style.display = "none";
+
+document.getElementById("refresh").value = localStorage.getItem("refresh");
+document.getElementById("refresh").style.display = "none";
+
+document.getElementById("access").value = localStorage.getItem("Authorization");
+document.getElementById("access").style.display = "none";
+
+function refresh(){
+
+  
+  location.reload();
+
+}
+
+function Logout(){
+
+  localStorage.clear();
+
+  window.location.href = "/login"
+  
+}
+
+
+/*
+window.onload=function(){
+      
+    function submitform(){
+        
+        document.forms["ref"].submit();
+
+  }
+
+    
+}
+*/
+
+
+document.getElementById("del").style.display = "none";
+function Delete(){
+  
+  document.getElementById("del").style.display = "block";
+}
+
+
+var myHeaders = new Headers();
+myHeaders.append("refresh", localStorage.getItem("refresh"));
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+
+fetch('/refreshToken',requestOptions).then(res=>{
+
+  return res.text();
+
+}).then(function(data){
+
+  authDATA = JSON.parse(data);
+
+  localStorage.setItem("Authorization","Bearer "+authDATA.token);
+
+})
+
+var myHeaders = new Headers();
+myHeaders.append("Authorization", localStorage.getItem("Authorization"));
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+const options = {
+  
+  method: 'POST',
+   headers: {
+      'Content-Type': 'application/json'
+    }
+};
+
+
+fetch('/test',options).then(res=>{
+  
+  
+   return res.text();
+
+}).then(function(data){
+
+  userData = JSON.parse(data);
+
+  console.log(userData.use);
+
+  var name = userData["use"][0]["username"];
+  console.log("name "+name);
+
+
+
+  var avatar = userData["use"][0]["Avatar"];
+  var tag = userData["use"][0]["tag"];
+  var bio = userData["use"][0]["bio"];
+  var month = userData["use"][0]["month"];
+  var day = userData["use"][0]["day"];
+  var year = userData["use"][0]["year"];
+  console.log(avatar);
+  document.getElementById('avatar').innerHTML = "<img src="+avatar+" style=height=40 width=40></img>";
+  document.getElementById('name').innerHTML = "<h2>"+name+"</h2>";
+  document.getElementById('tag').innerHTML = "<small>@"+tag+"</small>";
+  document.getElementById('bio').innerHTML = "<h4>"+bio+"</h4>";
+  document.getElementById('date').innerHTML = "<h5> Account created: "+month+"/"+day+"/"+year+"</h5>";
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
+
+
+{{/if}}
+

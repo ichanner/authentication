@@ -1,0 +1,58 @@
+<htmL>
+<script type="text/javascript">
+
+
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var authData = url.searchParams.get("token");
+        var refreshData = url.searchParams.get("refresh");
+    	var Mykey = "Authorization";
+        var refresh_key = "refresh";
+
+        localStorage.setItem(refresh_key,"Bearer "+refreshData);
+    	localStorage.setItem(Mykey, "Bearer "+authData);
+    	var tokenData = localStorage.getItem("Authorization");
+        var refreshData = localStorage.getItem("refresh");
+    	
+        var myHeaders = new Headers();
+        myHeaders.append(Mykey, tokenData);
+        myHeaders.append(refresh_key, refreshData);
+
+        var requestOptions = {
+        	method: 'POST',
+        	headers: myHeaders,
+        	redirect: 'follow'
+        };
+
+const options = {
+  
+  method: 'POST',
+   headers: {
+      'Content-Type': 'application/json'
+    }
+};
+    
+fetch('/test',options).then(res=>{
+  
+  
+   return res.text();
+
+}).then(function(data){
+
+  userData = JSON.parse(data);
+
+  console.log(userData.use);
+
+  var name = userData["use"][0]["username"];
+
+         window.location.href = "/users/"+name;
+
+ 	});
+
+       
+
+ 
+
+
+</script>
+</htmL>
