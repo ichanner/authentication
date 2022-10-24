@@ -206,7 +206,7 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, fu
                 }
 
 
-                setTimeout(checkHash, 3000); //Its lazy I know, however bcrypt actually takes a while to actually compare passwords....aysning it just fucking crashes it anyways
+               
 
                 function checkHash() {
 
